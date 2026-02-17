@@ -1,0 +1,8 @@
+
+Pipfile
+.venv
+.vscode/
+
+# Cleanup
+__pycache__/
+

@@ -1,33 +1,24 @@
 
 def my_sort(nums):
-    
+    """
+    A function that takes a list and sorts it in order without using built-in sort
+    """
     nums_length = len(nums)
     
     if nums_length > 1:
-        done = False
-        
         while True:
+            switch_order = False
             
-            for i in range(1, nums_length):
+            for i, _ in enumerate(range(1, nums_length), start=1):
                 
-                if i < nums_length:
+                if nums[i] < nums[i -1]:
+                    nums[i], nums[i -1] = nums[i -1], nums[i]
                     
-                    print(nums[i], nums[i-1])
-                    # There is no break!!!!!!!!!
-                    if nums[i -1] < nums[i]:
-                        print("ok")
-                        continue
-                    
-                    nums[i -1], nums[i] = nums[i], nums[i -1]
-                    print("flip")
-                
-                else:
-                    done = True
-                    break
-        
-            if done:
+                    switch_order = True
+
+            if not switch_order:
                 break
-    
+            
     return nums
 
 
@@ -55,10 +46,14 @@ for number in numbers:
     
     numbers_odd.append(number)
 
+print("Even numbers:", end=" ")
+for num in my_sort(numbers_even):
+    print(num, end=", ")
 
-print(numbers_odd)
-numbers_odd = my_sort(numbers_odd)
+print()
 
+print("Odd numbers:", end=" ")
+for num in my_sort(numbers_odd):
+    print(num, end=", ")
 
-
-print(numbers, numbers_odd, numbers_even)
+print()

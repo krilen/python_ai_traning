@@ -16,10 +16,9 @@ students = {
 VALID_LETTERS = "abcdefghijklmnopqrstuvwxyz"
 TRANSFORM_LETTERS = {"ö": "o", "å": "a", "ä": "a", "ü": "u"}
 
+
 def main():
-    
     while True:
-        
         selection = menu()
         
         if selection == "q":
@@ -29,7 +28,6 @@ def main():
         elif selection == "a":
             
             while True:
-                
                 print()
                 add_student()
                 
@@ -46,11 +44,9 @@ def main():
 
 
 def student_name_short(name):
-    
     short = ""
     
     for letter in name:
-        
         if letter in VALID_LETTERS:
             short += letter
             
@@ -68,7 +64,6 @@ def student_name_short(name):
 def menu():
     
     while True:
-        
         print()
         print("================= Student at Python AI high =================")
         print()
@@ -90,7 +85,6 @@ def menu():
 
 
 def add_student():
-
     student_firstname = student_lastname = student_birthyear = student_key = None
     
     while True:
@@ -114,7 +108,7 @@ def add_student():
             try:
                 student_birthyear = int(input("The students birthyear, between 1950 and 2014 >> "))
                 
-                # Reused the exception that existed
+                # Reused the exception that already existed
                 if student_birthyear < 1950 or student_birthyear > 2014:
                     raise ValueError
             
@@ -130,15 +124,18 @@ def add_student():
             print("That is not a valid student key, try again!")
             student_key = None
             continue
-                
         
         student_id = (student_name_short(student_firstname.lower()) 
                     +student_name_short(student_lastname.lower())
                     +student_key
                     +str(student_birthyear))
         
-        if not students.get(student_id, False):
-        
+        """
+        This whole student save should be refactored!!!
+        If the student exist create a new student ID then save the student
+        All in ONE stepnot two steps like it is now
+        """
+        if students.get(student_id, False):
             student["firstname"] = student_firstname
             student["lastname"] = student_lastname
             student["birthyear"] = student_birthyear
@@ -156,12 +153,8 @@ def add_student():
         student_firstname = student_lastname = student_birthyear = student_key = None
 
         # Should you be able to create another student ID or quit!!!!
-        
-        
         break
-    
-    
-    
+
     return
 
 

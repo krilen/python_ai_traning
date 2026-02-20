@@ -1,9 +1,6 @@
-students = {}
-VALID_LETTERS = "abcdefghijklmnopqrstuvwxyz"
-TRANSFORM_LETTERS = {"ö": "o", "å": "a", "ä": "a", "ü": "u"}
 
-# TMP data so I have something to work with
-{
+# Data to have something to work with
+students = {
  'josmA2000': {'firstname': 'John', 'lastname': 'Smith', 'birthyear': 2000, 'key': 'A', 'grades': ''},
  'anobD1999': {'firstname': 'Anna', 'lastname': 'Öberg', 'birthyear': 1999, 'key': 'D', 'grades': ''},
  'librE2005': {'firstname': 'Liam', 'lastname': 'Brown', 'birthyear': 2005, 'key': 'E', 'grades': ''},
@@ -16,7 +13,8 @@ TRANSFORM_LETTERS = {"ö": "o", "å": "a", "ä": "a", "ü": "u"}
  'saliE2006': {'firstname': 'Sara', 'lastname': 'Lind', 'birthyear': 2006, 'key': 'E', 'grades': ''}
 }
 
-
+VALID_LETTERS = "abcdefghijklmnopqrstuvwxyz"
+TRANSFORM_LETTERS = {"ö": "o", "å": "a", "ä": "a", "ü": "u"}
 
 def main():
     
@@ -102,21 +100,22 @@ def add_student():
             student_firstname = input("The students firstname >> ").title()
             
             if student_firstname == "":
-                print("Please provide a firstname for the student!")
+                print("Please provide a firstname for the student, try again!")
                 continue
             
         if not student_lastname:
-            student_lastname = input("The students lastname >> ")
+            student_lastname = input("The students lastname >> ").title()
             
             if student_lastname == "":
-                print("Please provide a lastname for the student!")
+                print("Please provide a lastname for the student, try again!")
                 continue
             
         if not student_birthyear:
             try:
                 student_birthyear = int(input("The students birthyear, between 1950 and 2014 >> "))
                 
-                if student_birthyear < 1950 or student_birthyear > 2013:
+                # Reused the exception that existed
+                if student_birthyear < 1950 or student_birthyear > 2014:
                     raise ValueError
             
             except ValueError:
@@ -127,28 +126,43 @@ def add_student():
         if not student_key:
             student_key = input("The students key (A, D, E, I, L, O and P are valid) >> ").upper()
         
-        if student_key not in ["A", "D", "E", "I", "L", "O", "P"] and len(student_key) == 1:
+        if student_key not in ["A", "D", "E", "I", "L", "O", "P"] or len(student_key) != 1:
             print("That is not a valid student key, try again!")
             student_key = None
             continue
                 
         
         student_id = (student_name_short(student_firstname.lower()) 
-                    +student_name_short(student_lastname[:2].lower())
+                    +student_name_short(student_lastname.lower())
                     +student_key
                     +str(student_birthyear))
         
-        student["firstname"] = student_firstname
-        student["lastname"] = student_lastname
-        student["birthyear"] = student_birthyear
-        student["key"] = student_key
+        if not students.get(student_id, False):
         
-        students[student_id] = student
+            student["firstname"] = student_firstname
+            student["lastname"] = student_lastname
+            student["birthyear"] = student_birthyear
+            student["key"] = student_key
+            
+            students[student_id] = student
+            
+            print("A student with the student ID: '{student_id}' was added.")
+            
+        else:
+            print(f"A student with that student ID, '{student_id}', already exits!")
+            
+            # Should we let python fix it? test to see if we converted the forth letter to number 1,2,3,....
         
         student_firstname = student_lastname = student_birthyear = student_key = None
 
+        # Should you be able to create another student ID or quit!!!!
+        
+        
         break
     
+    
+    
+    return
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+# Worked and played to long on this one. If I needed to use this I would had done it using OOP.
+
 
 # Data to have something to work with
 students = {
@@ -20,25 +22,36 @@ TRANSFORM_LETTERS = {"ö": "o", "å": "a", "ä": "a", "ü": "u"}
 def main():
     while True:
         selection = menu()
+        print()
         
-        if selection == "q":
-            print("Please come again")
-            break
+        match selection:
+            case "q":
+                print("Please come again")
+                print()
+                
+                break
         
-        elif selection == "a":
+            case "a":
+                while True:
+                    add_student()
+                    print()
+                    
+                    add_another_student = input("Do you want to add another student (y/n) >> ").casefold()
+                    
+                    if add_another_student == "y":
+                        continue
+                    
+                    else:
+                        break
             
-            while True:
-                print()
-                add_student()
+            case "l":
+                list_students()
                 
-                print()
-                add_another_student = input("Do you want to add another student (y/n) >> ").casefold()
+            case "g":
+                student_grades()
                 
-                if add_another_student == "y":
-                    continue
-                
-                else:
-                    break
+            case _:
+                continue
             
     return
 
@@ -61,6 +74,7 @@ def student_name_short(name):
     
     return short
 
+
 def menu():
     
     while True:
@@ -69,13 +83,15 @@ def menu():
         print()
         print("Chose what you want to do!")
         print(" 'a' - Add a student")
-        print(" 'l' - See students ")
+        print(" 'l' - See all students")
+        print(" 'g' - Student grades")
+        print()
         print(" 'q' - To quit!")
         print()
         
         selection = input("Your selection >> ")
         
-        if selection in ["a", "l", "q"]:
+        if selection in ["a", "l", "q", "g"]:
             break
         
         else:
@@ -129,35 +145,113 @@ def add_student():
                     +student_name_short(student_lastname.lower())
                     +student_key
                     +str(student_birthyear))
-        
-        """
-        This whole student save should be refactored!!!
-        If the student exist create a new student ID then save the student
-        All in ONE stepnot two steps like it is now
-        """
-        if students.get(student_id, False):
-            student["firstname"] = student_firstname
-            student["lastname"] = student_lastname
-            student["birthyear"] = student_birthyear
-            student["key"] = student_key
-            
-            students[student_id] = student
-            
-            print("A student with the student ID: '{student_id}' was added.")
-            
-        else:
-            print(f"A student with that student ID, '{student_id}', already exits!")
-            
-            # Should we let python fix it? test to see if we converted the forth letter to number 1,2,3,....
-        
-        student_firstname = student_lastname = student_birthyear = student_key = None
 
-        # Should you be able to create another student ID or quit!!!!
+        student["firstname"] = student_firstname
+        student["lastname"] = student_lastname
+        student["birthyear"] = student_birthyear
+        student["key"] = student_key
+        
+        if bool(students.get(student_id, False)):
+            
+            for i in range(1,10):
+                
+                new_student_id = student_id[:3] + str(i) + student_id[4:]
+                
+                if not bool(students.get(new_student_id, False)):
+                    student_id = new_student_id
+                    break
+            
+            else:
+                print("Not possible to create a student ID and add student.")
+                student_id = None
+
+        if student_id:
+            
+            print()
+            print("Student to be added")
+            print(f" - Student ID: {student_id}")
+            print(f" - First name: {student["firstname"]}")
+            print(f" - Last name: {student["lastname"]}")
+            print(f" - Key: {student["key"]}")
+            print(f" - Birth year: {student["birthyear"]}")
+            print()
+            
+            student_save_input = input("Do you want to add this student ('y' to add) >> ")
+            
+            if student_save_input.casefold() == "y":
+                students[student_id] = student
+            
+                print(f"A student with the student ID: '{student_id}' was saved.")
+        
         break
 
     return
 
 
+def list_student(student_id):
+    
+    print(student_id)
+
+    student = students.get(student_id, False)
+        
+    if bool(student):
+        print(f"Student: {student_id}")
+        print(f" - First name: {student["firstname"]}")
+        print(f" - Last name: {student["lastname"]}")
+        print(f" - Key: {student["key"]}")
+        print(f" - Birth year: {student["birthyear"]}")
+        print(f" - Grades: {"-" if student["grades"] == "" else student["grades"]}")
+
+        return True
+
+    else:
+        return False
+
+
+def list_students():
+    
+    for student_id in students:
+        
+        print()
+        _ = list_student(student_id)
+
+
+def student_grades():
+    
+    print()
+    print("Students")
+    
+    for student_id in students:
+        print(f" - Student ID: {student_id}, {students[student_id]['firstname']} {students[student_id]['lastname']} (Grades: {'-' if students[student_id]['grades'] == '' else students[student_id]['grades']}).")
+        
+    print()
+    
+    while True:
+        student_input = input("Enter the 'Student ID' to modify its grades ('q' to quit) >> ")
+        
+        if student_input.casefold() == "q":
+            break
+        
+        else:
+            
+            try:
+                student = students[student_input]
+        
+            except KeyError:
+                print("Student not found, try again!")
+                continue
+            
+            else:
+                student_input_grades = input("Enter the string of grades ('F', 'E', 'C', 'B' and 'A') for the student ()'q' to quit) >> ")
+                
+                if student_input_grades.casefold() == "q":
+                    break
+        
+                else:
+                    students[student_input]["grades"] = ", ".join([g.upper() for g in student_input_grades if g.upper() in ['F', 'E', 'C', 'B', 'A']])
+            
+    return
+    
 if __name__ == "__main__":
     
     main()

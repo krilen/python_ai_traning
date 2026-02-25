@@ -4,6 +4,11 @@ number3 = {"n1": 3}
 
 
 def change():
+    
+    print(number1, number2, number3)
+    
+    
+    
     number1 = 11
     number2.append(22)
     number3["n2"] = 33

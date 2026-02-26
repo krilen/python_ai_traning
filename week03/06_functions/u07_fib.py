@@ -1,12 +1,17 @@
 
-def fib(num: int) -> int:
-    if num <= 0:
-        return 0
-    
-    elif num == 1:
-        return 1
+def fib(num: int =0, x: int =0, y: int =1 ) -> None:
+    if num == 0:
+        print()
+        return 
     
     else:
-        return fib(num -1) + fib(num -2)
-    
-print(fib(7))
+        print(x, end=", ")
+
+        fib(num -1, y, x +y)
+
+
+fib(7)
+fib(12)
+fib(0)
+fib(1)
+fib(2)
